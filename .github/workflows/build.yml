@@ -1,0 +1,23 @@
+name: Build WebAssembly plug-in
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.95.0
+          targets: wasm32-unknown-unknown
+      - name: Build
+        run: cargo build --release --locked --target wasm32-unknown-unknown
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: physics-motion-wasm
+          path: target/wasm32-unknown-unknown/release/physics_motion.wasm
